@@ -1,0 +1,23 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Review {{ book.title }} - Bookshelf{% endblock %}
+
+{% block content %}
+<h1>Review: {{ book.title }}</h1>
+<p style="color: #7f8c8d; margin-bottom: 2rem;">by {{ book.author }}</p>
+
+<form method="post" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px;">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        {{ form.content.label_tag }}
+        {{ form.content }}
+        {% if form.content.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.content.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <button type="submit" class="btn">Save Review</button>
+    <a href="{% url 'book_detail' book.pk %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

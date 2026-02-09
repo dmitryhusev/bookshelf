@@ -1,0 +1,81 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Browse Books - Bookshelf{% endblock %}
+
+{% block content %}
+<h1>Browse Books</h1>
+
+<form method="get" class="search-form">
+    <input type="text" name="q" placeholder="Search by title or author..." value="{{ query|default:'' }}">
+    <input type="hidden" name="view" value="{{ view_mode }}">
+    <button type="submit">Search</button>
+    {% if query %}
+        <a href="?view={{ view_mode }}" class="btn btn-secondary">Clear</a>
+    {% endif %}
+</form>
+
+{% if query %}
+    <p style="color: #7f8c8d; margin-bottom: 1rem; font-size: 0.9rem;">Found {{ page_obj.paginator.count }} book{{ page_obj.paginator.count|pluralize }} for "{{ query }}"</p>
+{% else %}
+    <p style="color: #7f8c8d; margin-bottom: 1rem; font-size: 0.9rem;">Total: {{ page_obj.paginator.count }} book{{ page_obj.paginator.count|pluralize }}</p>
+{% endif %}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <div></div>
+    <div class="view-toggle">
+        <a href="?view=grid{% if query %}&q={{ query }}{% endif %}" {% if view_mode == 'grid' %}class="active"{% endif %}>⊞ Grid</a>
+        <a href="?view=list{% if query %}&q={{ query }}{% endif %}" {% if view_mode == 'list' %}class="active"{% endif %}>☰ List</a>
+    </div>
+</div>
+
+<div class="{% if view_mode == 'list' %}book-list{% else %}book-grid{% endif %}">
+    {% for book in page_obj %}
+        <div class="book-card">
+            <a href="{% url 'book_detail' book.pk %}">
+                {% if view_mode == 'list' %}
+                    <div class="book-card-content">
+                        <h3>{{ book.title }}</h3>
+                        <p>{{ book.author }}</p>
+                        {% if book.description %}
+                            <p style="margin-top: 0.5rem; font-size: 0.85rem; line-height: 1.4;">{{ book.description|truncatewords:30 }}</p>
+                        {% endif %}
+                        <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #95a5a6;">Added: {{ book.created_at|date:"M d, Y" }}</p>
+                    </div>
+                {% else %}
+                    {% if book.cover_url %}
+                        <img src="{{ book.cover_url }}" alt="{{ book.title }}">
+                    {% else %}
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='250'%3E%3Crect fill='%23ddd' width='200' height='250'/%3E%3Ctext fill='%23999' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial'%3ENo Cover%3C/text%3E%3C/svg%3E" alt="No cover">
+                    {% endif %}
+                    <h3>{{ book.title }}</h3>
+                    <p>{{ book.author }}</p>
+                {% endif %}
+            </a>
+        </div>
+    {% empty %}
+        <p>No books found.</p>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1&view={{ view_mode }}{% if query %}&q={{ query }}{% endif %}">« First</a>
+            <a href="?page={{ page_obj.previous_page_number }}&view={{ view_mode }}{% if query %}&q={{ query }}{% endif %}">‹ Prev</a>
+        {% else %}
+            <span class="disabled">« First</span>
+            <span class="disabled">‹ Prev</span>
+        {% endif %}
+
+        <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&view={{ view_mode }}{% if query %}&q={{ query }}{% endif %}">Next ›</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&view={{ view_mode }}{% if query %}&q={{ query }}{% endif %}">Last »</a>
+        {% else %}
+            <span class="disabled">Next ›</span>
+            <span class="disabled">Last »</span>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

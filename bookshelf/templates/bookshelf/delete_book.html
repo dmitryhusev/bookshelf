@@ -1,0 +1,25 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Delete {{ book.title }} - Bookshelf{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px;">
+    <h1>Delete Book</h1>
+    
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 1rem;">
+        <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+            Are you sure you want to delete <strong>{{ book.title }}</strong> by {{ book.author }}?
+        </p>
+        
+        <p style="color: #e74c3c; margin-bottom: 2rem;">
+            This action cannot be undone. All reviews and shelf entries for this book will also be deleted.
+        </p>
+        
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete Book</button>
+        </form>
+        <a href="{% url 'book_detail' book.pk %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>
+{% endblock %}

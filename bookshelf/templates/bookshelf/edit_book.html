@@ -1,0 +1,62 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Edit {{ book.title }} - Bookshelf{% endblock %}
+
+{% block content %}
+<h1>Edit Book</h1>
+
+<form method="post" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px;">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="{{ form.title.id_for_label }}">Title *</label>
+        {{ form.title }}
+        {% if form.title.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.title.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.author.id_for_label }}">Author *</label>
+        {{ form.author }}
+        {% if form.author.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.author.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.description.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.cover_url.id_for_label }}">Cover Image URL</label>
+        {{ form.cover_url }}
+        {% if form.cover_url.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.cover_url.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.isbn.id_for_label }}">ISBN</label>
+        {{ form.isbn }}
+        {% if form.isbn.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.isbn.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.published_year.id_for_label }}">Published Year</label>
+        {{ form.published_year }}
+        {% if form.published_year.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.published_year.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <button type="submit" class="btn">Save Changes</button>
+    <a href="{% url 'book_detail' book.pk %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
