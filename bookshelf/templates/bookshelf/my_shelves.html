@@ -37,11 +37,13 @@
                         {% endif %}
                     </div>
                 {% else %}
-                    {% if shelf_item.book.cover_url %}
-                        <img src="{{ shelf_item.book.cover_url }}" alt="{{ shelf_item.book.title }}">
-                    {% else %}
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='250'%3E%3Crect fill='%23ddd' width='200' height='250'/%3E%3Ctext fill='%23999' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial'%3ENo Cover%3C/text%3E%3C/svg%3E" alt="No cover">
-                    {% endif %}
+                    {% with cover=shelf_item.book.get_cover %}
+                        {% if cover %}
+                            <img src="{{ cover }}" alt="{{ shelf_item.book.title }}">
+                        {% else %}
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='250'%3E%3Crect fill='%23ddd' width='200' height='250'/%3E%3Ctext fill='%23999' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial'%3ENo Cover%3C/text%3E%3C/svg%3E" alt="No cover">
+                        {% endif %}
+                    {% endwith %}
                     <h3>{{ shelf_item.book.title }}</h3>
                     <p>{{ shelf_item.book.author }}</p>
                     <small style="color: #95a5a6; font-size: 0.85rem;">{{ shelf_item.get_shelf_type_display }}</small>

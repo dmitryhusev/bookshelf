@@ -45,10 +45,11 @@
     
     <div class="form-group">
         <label for="{{ form.cover_image.id_for_label }}">Or Upload Cover Image</label>
-        {% if book.cover_url %}
-            <img src="{{ book.cover_url }}" alt="{{ book.title }}">
-        {% else %}
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='250'%3E%3Crect fill='%23ddd' width='200' height='250'/%3E%3Ctext fill='%23999' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial'%3ENo Cover%3C/text%3E%3C/svg%3E" alt="No cover">
+        {% if book.cover_image %}
+            <div style="margin-bottom: 0.5rem;">
+                <img src="{{ book.cover_image.url }}" alt="Current cover" style="max-width: 150px; border-radius: 4px;">
+                <p style="font-size: 0.85rem; color: #7f8c8d;">Current uploaded image</p>
+            </div>
         {% endif %}
         {{ form.cover_image }}
         {% if form.cover_image.errors %}
