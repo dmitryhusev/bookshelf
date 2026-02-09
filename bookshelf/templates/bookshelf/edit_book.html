@@ -5,7 +5,7 @@
 {% block content %}
 <h1>Edit Book</h1>
 
-<form method="post" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px;">
+<form method="post" enctype="multipart/form-data" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px;">
     {% csrf_token %}
     
     <div class="form-group">
@@ -37,6 +37,25 @@
         {{ form.cover_url }}
         {% if form.cover_url.errors %}
             <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.cover_url.errors }}</p>
+        {% endif %}
+        {% if form.cover_url.help_text %}
+            <small style="color: #7f8c8d; font-size: 0.85rem;">{{ form.cover_url.help_text }}</small>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.cover_image.id_for_label }}">Or Upload Cover Image</label>
+        {% if book.cover_url %}
+            <img src="{{ book.cover_url }}" alt="{{ book.title }}">
+        {% else %}
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='250'%3E%3Crect fill='%23ddd' width='200' height='250'/%3E%3Ctext fill='%23999' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial'%3ENo Cover%3C/text%3E%3C/svg%3E" alt="No cover">
+        {% endif %}
+        {{ form.cover_image }}
+        {% if form.cover_image.errors %}
+            <p style="color: #e74c3c; font-size: 0.9rem;">{{ form.cover_image.errors }}</p>
+        {% endif %}
+        {% if form.cover_image.help_text %}
+            <small style="color: #7f8c8d; font-size: 0.85rem;">{{ form.cover_image.help_text }}</small>
         {% endif %}
     </div>
     

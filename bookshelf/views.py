@@ -110,6 +110,12 @@ def my_shelves(request):
     
     if shelf_type == 'all':
         shelved_books = Shelf.objects.filter(user=request.user).select_related('book')
+    elif shelf_type == 'read':
+        # For read books, sort by date_finished (most recent first), then by added_at
+        shelved_books = Shelf.objects.filter(
+            user=request.user,
+            shelf_type=shelf_type
+        ).select_related('book').order_by('-date_finished', '-added_at')
     else:
         shelved_books = Shelf.objects.filter(
             user=request.user,
@@ -173,7 +179,7 @@ def delete_review(request, pk):
 @login_required
 def add_book(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = BookForm(request.POST, request.FILES)
         if form.is_valid():
             book = form.save()
             messages.success(request, f'Added "{book.title}"!')
@@ -189,7 +195,7 @@ def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     
     if request.method == 'POST':
-        form = BookForm(request.POST, instance=book)
+        form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             book = form.save()
             messages.success(request, f'Updated "{book.title}"!')

@@ -7,12 +7,19 @@ class Book(models.Model):
     author = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     cover_url = models.URLField(blank=True, null=True)
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
     isbn = models.CharField(max_length=13, blank=True)
     published_year = models.IntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} by {self.author}"
+    
+    def get_cover(self):
+        """Return cover image URL or uploaded image"""
+        if self.cover_image:
+            return self.cover_image.url
+        return self.cover_url
 
     class Meta:
         ordering = ['-created_at']
